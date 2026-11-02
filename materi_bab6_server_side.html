@@ -1,0 +1,62 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BAB 6 Pemrograman Server-Side</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6fc;color:#263449;font:16px/1.7 Arial}header{background:#173b75;color:white;padding:30px 18px}header,main{padding-left:max(18px,calc((100% - 900px)/2));padding-right:max(18px,calc((100% - 900px)/2))}h1{line-height:1.25}main{padding-top:22px;padding-bottom:40px}section{background:white;border:1px solid #dce5f1;border-radius:13px;padding:20px;margin-bottom:16px}h2{color:#173b75;margin-top:0}h3{margin-bottom:6px}pre{background:#101827;color:#e5edf8;padding:14px;border-radius:9px;overflow:auto}code{font-family:monospace}.nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}.nav a{background:#e1ecff;color:#173b75;padding:6px 10px;border-radius:20px;text-decoration:none;font-size:14px}.note{background:#eff6ff;border-left:4px solid #2563eb;padding:10px 13px}
+</style></head><body><header><small>MATERI PEMBELAJARAN</small><h1>BAB 6. Menerapkan Pemrograman Server-Side</h1><p>Rekayasa Perangkat Lunak (RPL)</p></header><main>
+<div class="nav"><a href="#tujuan">Tujuan</a><a href="#konsep">Konsep</a><a href="#bahasa">Bahasa</a><a href="#php">PHP</a><a href="#database">Database</a><a href="#form">Form</a><a href="#debug">Debugging</a><a href="#latihan">Latihan</a></div>
+<section id="tujuan"><h2>Tujuan Pembelajaran</h2><ol><li>Memahami konsep pemrograman server-side.</li><li>Mengimplementasikan kode server-side untuk menangani permintaan client.</li><li>Membuat aplikasi web dinamis menggunakan server-side.</li><li>Mengintegrasikan database untuk menyimpan dan mengambil data.</li></ol></section>
+<section><h2>Pendahuluan</h2><p>Pemrograman web terdiri dari client-side dan server-side. Server-side mengolah data di sisi server sebelum dikirimkan ke browser. Server-side digunakan untuk membuat web dinamis seperti formulir pendaftaran, login, dan pengelolaan database. Bahasa yang umum digunakan adalah PHP, Python, Node.js, Ruby, dan Java.</p></section>
+<section id="konsep"><h2>1. Konsep Pemrograman Server-Side</h2><h3>a. Apa itu Server-Side?</h3><p>Server-side adalah bagian aplikasi web yang dijalankan di server. Permintaan pengguna diproses server, kemudian hasilnya dikirim kembali ke browser.</p><h3>b. Proses Permintaan dan Respons</h3><ol><li><b>Client Request:</b> pengguna mengirim permintaan melalui browser.</li><li><b>Server Processing:</b> server memproses data, mengambil database, atau melakukan perhitungan.</li><li><b>Response:</b> server mengirim hasil berupa HTML, JSON, atau format lain.</li></ol></section>
+<section id="bahasa"><h2>2. Pengantar Bahasa Server-Side</h2><ul><li><b>PHP:</b> membuat aplikasi web dinamis.</li><li><b>Python (Django, Flask):</b> pengembangan web modular.</li><li><b>Node.js (JavaScript):</b> JavaScript di server, cocok untuk real-time.</li><li><b>Ruby (Ruby on Rails):</b> framework untuk memudahkan pengembangan web.</li></ul></section>
+<section id="php"><h2>3. Membuat Program Server-Side Menggunakan PHP</h2><h3>a. Struktur Dasar PHP</h3><p>File PHP berakhiran <code>.php</code>, dijalankan di server, dan kode diawali <code>&lt;?php</code>.</p><pre><code>&lt;?php
+echo "Hello, world!";
+?&gt;</code></pre><h3>b. Mengambil Input Pengguna</h3><p>HTML Form:</p><pre><code>&lt;form action="proses.php" method="POST"&gt;
+ Nama: &lt;input type="text" name="nama"&gt;
+ &lt;input type="submit" value="Kirim"&gt;
+&lt;/form&gt;</code></pre><p>Proses PHP (proses.php):</p><pre><code>&lt;?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $nama = $_POST['nama'];
+  echo "Nama Anda adalah: " . $nama;
+}
+?&gt;</code></pre></section>
+<section id="database"><h2>4. Menyambungkan Web dengan Database</h2><h3>a. Konsep Database</h3><p>Database menyimpan data pengguna seperti nama dan email. PHP dapat terhubung ke MySQL dan menjalankan query.</p><h3>1. Membuat koneksi</h3><pre><code>&lt;?php
+$conn = new mysqli("localhost", "root", "", "database_siswa");
+if ($conn-&gt;connect_error) {
+  die("Koneksi gagal: " . $conn-&gt;connect_error);
+}
+?&gt;</code></pre><h3>2. Menampilkan data</h3><pre><code>&lt;?php
+$sql = "SELECT id, nama FROM siswa";
+$result = $conn-&gt;query($sql);
+if ($result-&gt;num_rows &gt; 0) {
+  while ($row = $result-&gt;fetch_assoc()) {
+    echo "ID: " . $row["id"] . " - Nama: " . $row["nama"] . "&lt;br&gt;";
+  }
+} else {
+  echo "0 hasil";
+}
+$conn-&gt;close();
+?&gt;</code></pre><p class="note">Contoh ini membutuhkan database <code>database_siswa</code> dan tabel <code>siswa</code>.</p></section>
+<section id="form"><h2>5. Menangani Formulir Pengguna</h2><p>Server-side memproses data formulir dan memberikan respons. Data pendaftaran dapat disimpan ke database.</p><h3>Formulir pendaftaran</h3><pre><code>&lt;form action="daftar.php" method="POST"&gt;
+ Nama: &lt;input type="text" name="nama"&gt;
+ Email: &lt;input type="email" name="email"&gt;
+ &lt;input type="submit" value="Daftar"&gt;
+&lt;/form&gt;</code></pre><h3>Proses PHP (daftar.php)</h3><pre><code>&lt;?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $nama = $_POST['nama'];
+  $email = $_POST['email'];
+  $conn = new mysqli("localhost", "root", "", "database_siswa");
+  if ($conn-&gt;connect_error) {
+    die("Koneksi gagal: " . $conn-&gt;connect_error);
+  }
+  $sql = "INSERT INTO pengguna (nama, email)
+          VALUES ('$nama', '$email')";
+  if ($conn-&gt;query($sql) === TRUE) {
+    echo "Data berhasil disimpan!";
+  } else {
+    echo "Terjadi kesalahan: " . $conn-&gt;error;
+  }
+  $conn-&gt;close();
+}
+?&gt;</code></pre><p class="note"><b>Keamanan:</b> Untuk aplikasi nyata, gunakan prepared statement dan validasi input agar lebih aman dari SQL injection.</p></section>
+<section id="debug"><h2>6. Pengujian dan Debugging</h2><ul><li>Gunakan <code>echo</code> atau <code>var_dump()</code> untuk melihat nilai variabel.</li><li>Uji query database dengan phpMyAdmin atau SQL client.</li></ul></section>
+<section id="latihan"><h2>7. Latihan Praktik</h2><ol><li>Buat form login username dan password serta server-side untuk memverifikasi data.</li><li>Buat aplikasi untuk menambah, melihat, dan menghapus data pengguna dalam database.</li></ol></section>
+<section><h2>Penutup</h2><p>Pemrograman server-side penting untuk membuat aplikasi web dinamis yang berinteraksi dengan pengguna dan database. Dengan memahami konsep dan teknik dasarnya, siswa dapat membuat aplikasi web yang lebih fungsional.</p></section>
+</main></body></html>
